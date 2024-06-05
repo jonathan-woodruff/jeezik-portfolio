@@ -62,3 +62,17 @@ exports.protected = async (req, res) => {
     }
 };
 
+//delete the cookie
+exports.logout = async (req, res) => {
+    try {
+        return res.status(200).clearCookie('token', { httpOnly: true, secure: true }).json({
+            success: true,
+            message: 'Logged out successfully'
+        });
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
