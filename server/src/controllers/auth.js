@@ -33,14 +33,14 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const user = req.user; //you set req.user in validators/auth.js
+    const user = req.user;
     const payload = {
         id: user.user_id,
         email: user.email
     };
     try {
-        const token = await sign(payload, SECRET);
-        return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({
+        const token = await sign(payload, SECRET); //create jwt token
+        return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
             success: true,
             message: 'Logged in successfully'
         })

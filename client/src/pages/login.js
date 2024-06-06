@@ -38,8 +38,7 @@ const defaultTheme = createTheme();
 const Login = () => {
     const [values, setValues] = useState({
       email: '',
-      password: '',
-      isChecked: true
+      password: ''
     });
     const [error, setError] = useState(false);
 
@@ -47,14 +46,6 @@ const Login = () => {
 
     const handleChange = (e) => {
       setValues({ ...values, [e.target.name]: e.target.value});
-    };
-
-    const toggleChecked = () => {
-      if (values.isChecked) {
-        setValues({ ...values, isChecked: false});
-      } else {
-        setValues({ ...values, isChecked: true});
-      }    
     };
 
     const handleSubmit = async (e) => {
@@ -70,8 +61,6 @@ const Login = () => {
         setError(errorMessage);
       }
     };
-
-    const { serverURL } = useSelector(state => state.glob);
 
     return (
       <Layout>
@@ -113,10 +102,6 @@ const Login = () => {
                   value={ values.password }
                   onChange={ (e) => handleChange(e) }
                   autoComplete="current-password"
-                />
-                <FormControlLabel
-                  control={<Checkbox checked={ values.isChecked } color="primary" onChange={ () => toggleChecked() } />}
-                  label="Remember me"
                 />
                 <Button
                   type="submit"

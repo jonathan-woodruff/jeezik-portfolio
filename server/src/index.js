@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const { PORT, CLIENT_URL } = require('./constants/index');
-const authRoutes = require('./routes/auth');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors');
@@ -13,6 +12,9 @@ app.use(express.json()); //parses incoming requests with JSON payloads and enabl
 app.use(cookieParser()); //gives you access to req.cookies or req.signedCookies
 app.use(cors({ origin: CLIENT_URL, credentials: true })); //credentials: true will allow the client to send the cookie containing user credentials
 app.use(passport.initialize());
+
+//import routes
+const authRoutes = require('./routes/auth');
 
 //initialize routes
 app.use('/auth', authRoutes); //mount the router at /auth

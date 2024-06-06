@@ -1,7 +1,8 @@
 import { BrowserRouter, Navigate, Routes, Route, Outlet } from 'react-router-dom';
 import Register from './pages/register';
 import Login from './pages/login';
-import Dashboard from './pages/dashboard';
+import Generate from './pages/generate';
+import Home from './pages/home';
 import { useSelector, useDispatch } from 'react-redux';
 
 const PrivateRoutes =  () => {
@@ -17,7 +18,7 @@ const RestrictedRoutes = () => {
   const { isAuth } = useSelector(state => state.auth);
   return (
     <>
-      { !isAuth ? <Outlet /> : <Navigate to='/dashboard'/> }
+      { !isAuth ? <Outlet /> : <Navigate to='/generate'/> }
     </>
   );
 };
@@ -27,8 +28,9 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/home' element={ <Home /> } />
         <Route element={ <PrivateRoutes /> } >
-          <Route path='/dashboard' element={ <Dashboard /> } />
+          <Route path='/generate' element={ <Generate /> } />
         </Route>
 
         <Route element={ <RestrictedRoutes /> } >

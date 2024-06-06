@@ -4,7 +4,7 @@ import { AppBar, Toolbar, IconButton, Typography, Stack, Button, useMediaQuery }
 import EggIcon from '@mui/icons-material/Egg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-//import { onLogout } from '../api/auth';
+import { onLogout } from '../api/auth';
 import { unauthenticateUser } from '../redux/slices/authSlice';
 import { useTheme } from '@mui/material/styles';
 
@@ -14,18 +14,17 @@ export const Navbar = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    /*
+    
     const logout = async () => {
         try {
             await onLogout();
-            dispatch(notSSO());
             dispatch(unauthenticateUser());
             localStorage.removeItem('isAuth');
         } catch(error) {
             console.log(error.response);
         }
     };
-    */
+    
 
     const { isAuth } = useSelector(state => state.auth);
     const { clientURL } = useSelector(state => state.glob);
@@ -41,8 +40,8 @@ export const Navbar = () => {
                 </Typography>
                 {isAuth ? (
                     <Stack direction='row' spacing={3}>
-                        <Button color='inherit' /*onClick={ () => navigate('/list') }*/>Home</Button>
-                        <Button color='inherit' /*onClick={ () => logout() } sx={{ mr: 1 }}*/>Log out</Button>
+                        <Button color='inherit' onClick={ () => navigate('/home') }>Home</Button>
+                        <Button color='inherit' onClick={ () => logout() } sx={{ mr: 1 }}>Log out</Button>
                     </Stack>
                 ) : (
                     <Stack direction='row' spacing={3}>
