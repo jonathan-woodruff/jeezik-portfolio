@@ -1,10 +1,9 @@
 /* sign-up page */
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout';
 import { onRegistration } from '../api/auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { authenticateUser } from '../redux/slices/authSlice';
 import {
   Button,
   CssBaseline,
@@ -34,37 +33,49 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 const Register = () => {
+    const navigate = useNavigate();
     const [values, setValues] = useState({
       email: '',
       password: ''
     });
-    const [error, setError] = useState(false);
-    const [success, setSuccess] = useState(false);
-
-    const dispatch = useDispatch();
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     const handleChange = (e) => {
       setValues({ ...values, [e.target.name]: e.target.value});
-      return console.log(values)
+      setEmailError('');
+      setPasswordError('');
+    };
+
+    //helper function to make a field show it is in an error state
+    const showError = errorMessage => {
+      const regMessage = errorMessage.toLowerCase();
+      const regEmail = /email/;
+      let reArray = regEmail.exec(regMessage);
+      if (reArray !== null) { //errorMessage contains email
+        setEmailError(errorMessage);
+        return;
+      }
+      const regPassword = /password/;
+      reArray = regPassword.exec(regMessage);
+      if (reArray !== null) { //errorMessage contains password
+        setPasswordError(errorMessage);
+      }
     };
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+      setEmailError('');
+      setPasswordError('');
       try {
-        const { data } = await onRegistration(values);
-        setError('');
-        setSuccess(data.message);
-        setValues({ email: '', password: '' });
-        dispatch(authenticateUser());
-        localStorage.setItem('isAuth', 'true');
+        await onRegistration(values);
+        localStorage.setItem('justSignedUp', 'true');
+        navigate('../login');
       } catch(error) {
-        console.log(error.response.data.errors[0].msg); //error from axios
-        setError(error.response.data.errors[0].msg);
-        setSuccess('');
+        const errorMessage = error.response.data.errors[0].msg; //error from axios
+        showError(errorMessage);
       }
     };
-
-    const { serverURL } = useSelector(state => state.glob);
 
     return (
       <Layout>
@@ -93,6 +104,8 @@ const Register = () => {
                       name="email"
                       value={ values.email }
                       autoComplete="email"
+                      error={ emailError ? true : false }
+                      helperText={ emailError }
                       onChange={ (e) => handleChange(e) }
                     />
                   </Grid>
@@ -106,6 +119,8 @@ const Register = () => {
                       id="password"
                       value={ values.password }
                       autoComplete="new-password"
+                      error={ passwordError ? true : false } 
+                      helperText={ passwordError }
                       onChange={ (e) => handleChange(e) }
                     />
                   </Grid>
@@ -125,8 +140,6 @@ const Register = () => {
                     </Link>
                   </Grid>
                 </Grid>
-                <div style={{ color: 'red', margin: '10px 0', textAlign: 'center' }}>{ error }</div>
-                <div style={{ color: 'green', margin: '10px 0', textAlign: 'center' }}>{ success }</div>
               </Box>
             </Box>
             <Copyright sx={{ mt: 5 }} />

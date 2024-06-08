@@ -3,10 +3,10 @@ const { compare } = require('bcrypt');
 const db = require('../db');
 
 //password
-const password = check('password').isLength({ min: 6, max: 15}).withMessage('Password must be between 6 and 15 characters.');
+const password = check('password').isLength({ min: 6, max: 15}).withMessage('Password must be between 6 and 15 characters');
 
 //email
-const email = check('email').isEmail().withMessage('Please enter a valid email address.');
+const email = check('email').isEmail().withMessage('Please enter a valid email address');
 
 //check if email and password combination exists
 const emailExists = check('email').custom(async (value) => {
@@ -32,5 +32,5 @@ const loginFieldsCheck = check('email').custom(async (value, { req }) => {
 
 module.exports = {
     registerValidation: [email, password, emailExists],
-    loginValidation: [loginFieldsCheck]
+    loginValidation: [email, loginFieldsCheck]
 };

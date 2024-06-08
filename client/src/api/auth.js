@@ -13,4 +13,8 @@ export async function onLogin(loginData) {
 
 export async function onLogout() {
     return await axios.get(`${SERVER_URL}/auth/logout`);
-}
+};
+
+export async function onGenerate() {
+    return await axios.get(`${SERVER_URL}/auth/generate`);
+};

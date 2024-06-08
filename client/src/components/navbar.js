@@ -40,7 +40,6 @@ export const Navbar = () => {
                 </Typography>
                 {isAuth ? (
                     <Stack direction='row' spacing={3}>
-                        <Button color='inherit' onClick={ () => navigate('/home') }>Home</Button>
                         <Button color='inherit' onClick={ () => logout() } sx={{ mr: 1 }}>Log out</Button>
                     </Stack>
                 ) : (

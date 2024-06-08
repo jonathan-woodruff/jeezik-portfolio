@@ -2,8 +2,7 @@ import { BrowserRouter, Navigate, Routes, Route, Outlet } from 'react-router-dom
 import Register from './pages/register';
 import Login from './pages/login';
 import Generate from './pages/generate';
-import Home from './pages/home';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const PrivateRoutes =  () => {
   const { isAuth } = useSelector(state => state.auth);
@@ -28,7 +27,6 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/home' element={ <Home /> } />
         <Route element={ <PrivateRoutes /> } >
           <Route path='/generate' element={ <Generate /> } />
         </Route>
