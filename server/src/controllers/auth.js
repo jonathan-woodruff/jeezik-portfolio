@@ -2,18 +2,7 @@ const db = require('../db');
 const { hash } = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 const { SECRET } = require('../constants/index');
-
-exports.getUsers = async (req, res) => {
-    try {
-        const { rows } = await db.query(`SELECT user_id, email FROM users`);
-        return res.status(200).json({
-            success: true,
-            users: rows
-        })
-    } catch(error) {
-        console.log(error.message);
-    }
-};
+const { generateOptimalPaths } = require('../../lpsolver/node_modules/javascript-lp-solver/model');
 
 exports.register = async (req, res) => {
     const { email, password } = req.body;
@@ -52,22 +41,29 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.protected = async (req, res) => {
-    try {
-        return res.status(200).json({
-            info: 'protected info'
-        });
-    } catch(error) {
-        console.log(error.message);
-    }
-};
-
 //delete the cookie
 exports.logout = async (req, res) => {
     try {
         return res.status(200).clearCookie('token', { httpOnly: true, secure: true }).json({
             success: true,
             message: 'Logged out successfully'
+        });
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
+
+//generate the schedule
+exports.generate = async (req, res) => {
+    const { selectedDoctors } = req.body;
+    console.log(selectedDoctors);
+    try {
+        const results = await generateOptimalPaths(selectedDoctors);
+        res.status(200).json({
+            results: results
         });
     } catch(error) {
         console.log(error.message);

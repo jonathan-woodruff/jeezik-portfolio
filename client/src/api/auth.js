@@ -15,6 +15,6 @@ export async function onLogout() {
     return await axios.get(`${SERVER_URL}/auth/logout`);
 };
 
-export async function onGenerate() {
-    return await axios.get(`${SERVER_URL}/auth/generate`);
+export async function onGenerate(generateData) {
+    return await axios.post(`${SERVER_URL}/auth/generate`, generateData);
 };

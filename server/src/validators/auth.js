@@ -30,7 +30,16 @@ const loginFieldsCheck = check('email').custom(async (value, { req }) => {
     req.user = user.rows[0];
 });
 
+//doctors validation
+const doctorsCheck = check('selectedDoctors').custom(async (value) => {
+    for(let doctor in value) {
+        if (value[doctor].isChecked) return;
+    }
+    throw new Error('Please select at least one anesthesiologist');
+});
+
 module.exports = {
     registerValidation: [email, password, emailExists],
-    loginValidation: [email, loginFieldsCheck]
+    loginValidation: [email, loginFieldsCheck],
+    generateValidation: [doctorsCheck]
 };
