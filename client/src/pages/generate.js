@@ -58,6 +58,100 @@ const Generate = () => {
     return selectedDoctors;
   };
 
+  //helper function to find the destination node for a given decision variable
+  //returns the decision variable or null if there is no decision variable matching the inputs
+  const findDestination = (solutionArray, dayIndex, doctorIndex, sourceNode) => {
+    solutionArray.forEach(decisionVariable => {
+      const rePattern = new RegExp('x[' + dayIndex + '][' + doctorIndex + '][' + sourceNode + '][');
+    })
+  };
+
+  //helper function to parse the results into the CSV body
+  const parseBody = data => {
+    const { days, doctors, nodes } = data;
+    let destinationDummyReached;
+    for (let i = 0; i < doctors.length; i++) {
+      for (let j = 0; j < days.length; j++) {
+        destinationDummyReached = false;
+        while (!destinationDummyReached) {
+
+        }
+      }
+    };
+  };
+
+  //helper function to parse the results from lp solver into a CSV-friendly format
+  const parseResults = data => {
+    const header = [data.days.join(',')].join('\n');
+    const body = parseBody(data);
+    const resultsArray = Object.keys(data.results);
+    //port decision variables over to solutionArray
+    const solutionArray = [];
+    const rePattern = /x\[/;
+    for (let i = 0; i < resultsArray.length; i++) {
+      let reArray = rePattern.exec(resultsArray[i].toLowerCase());
+      if (reArray !== null) { //pattern matches therefore the item in resultsArray is a decision variable
+        solutionArray.push(resultsArray[i]);
+      };
+    };
+    console.log(header);
+    return solutionArray;
+  };
+
+  //helper function to download a csv of the results
+  const serveCSV = results => {
+    const parsedResults = parseResults(results);
+    console.log(parsedResults);
+    //get();
+  };
+
+  // Function to download the CSV file
+const download = (data) => {
+  // Create a Blob with the CSV data and type
+  const blob = new Blob([data], { type: 'text/csv' });
+  
+  // Create a URL for the Blob
+  const url = URL.createObjectURL(blob);
+  
+  // Create an anchor tag for downloading
+  const a = document.createElement('a');
+  
+  // Set the URL and download attribute of the anchor tag
+  a.href = url;
+  a.download = 'download.csv';
+  
+  // Trigger the download by clicking the anchor tag
+  a.click();
+}
+
+// Function to create a CSV string from an object
+const csvmaker = (data) => {
+  // Get the keys (headers) of the object
+  const headers = Object.keys(data);
+  
+  // Get the values of the object
+  const values = Object.values(data);
+  
+  // Join the headers and values with commas and newlines to create the CSV string
+  return [headers.join(','), values.join(',')].join('\n');
+}
+
+// Asynchronous function to fetch data and download the CSV file
+const get = async () => {
+  // Example data object
+  const data = {
+      id: 1,
+      name: `"geeks\nnerds"`,
+      profession: "developer"
+  };
+  
+  // Create the CSV string from the data
+  const csvdata = csvmaker(data);
+  
+  // Download the CSV file
+  download(csvdata);
+}
+
   const handleGenerate = async () => {
     const selectedDoctors = getSelectedDoctors();
     const payload = {
@@ -65,7 +159,8 @@ const Generate = () => {
     };
     try {
       const { data } = await onGenerate(payload);
-      console.log(data.results);
+      console.log(data);
+      serveCSV(data);
     } catch(error) {
       const errorMessage = error.response.data.errors[0].msg;
       setGenerateError(errorMessage);

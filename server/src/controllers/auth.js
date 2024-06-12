@@ -59,11 +59,13 @@ exports.logout = async (req, res) => {
 //generate the schedule
 exports.generate = async (req, res) => {
     const { selectedDoctors } = req.body;
-    console.log(selectedDoctors);
     try {
-        const results = await generateOptimalPaths(selectedDoctors);
+        const data = await generateOptimalPaths(selectedDoctors);
         res.status(200).json({
-            results: results
+            results: data.results,
+            days: data.days,
+            doctors: data.doctors,
+            nodes: data.nodes
         });
     } catch(error) {
         console.log(error.message);
