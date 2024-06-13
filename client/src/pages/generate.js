@@ -61,42 +61,55 @@ const Generate = () => {
   //helper function to find the destination node for a given decision variable
   //returns the decision variable or null if there is no decision variable matching the inputs
   const findDestination = (solutionArray, dayIndex, doctorIndex, sourceNode) => {
-    const rePattern = new RegExp('x[' + dayIndex + '][' + doctorIndex + '][' + sourceNode + '][');
+    const subStr = 'x[' + dayIndex + '][' + doctorIndex + '][' + sourceNode + ']';
+    let destinationNode = null;
     solutionArray.forEach(decisionVariable => {
-      let reArray = rePattern.exec(decisionVariable);
-      if (reArray !== null) { //pattern matches
+      if (decisionVariable.includes(subStr)) { 
         let startIndex = decisionVariable.lastIndexOf('[') + 1;
         let endIndex = decisionVariable.lastIndexOf(']');
-        let destinationNode = decisionVariable.slice(startIndex, endIndex);
-        return destinationNode;
+        destinationNode = decisionVariable.slice(startIndex, endIndex);
+        return; //exit forEach
       }  
     });
-    return null;
+    return destinationNode;
   };
 
   //helper function to parse the results into the CSV body
   const parseBody = (data, solutionArray) => {
     let body = ''; //initialize
-    const { days, doctors, nodes, destinationDummyNodes } = data;
+    const { days, doctors, nodes, dummyDestinationNodes } = data;
     for (let i = 0; i < doctors.length; i++) {
+      let doctorBody = `\n${doctors[i]},`;
       for (let j = 0; j < days.length; j++) {
         let destinationDummyReached = false;
         let sourceNode = 0;
+        let count = 0;
         while (!destinationDummyReached) {
           let destinationNode = findDestination(solutionArray, j, i, sourceNode);
-          if (destinationNode === null || destinationNode === destinationDummyNodes[j]) {
+          if (destinationNode === null || destinationNode === dummyDestinationNodes[j]) {
+            if (count === 1) {
+              doctorBody = doctorBody.slice(1);
+            } else {
+              doctorBody += `"`;
+            };
+            doctorBody += `,`;
             destinationDummyReached = true;
           } else {
             let { location, interval } = nodes[days[j]][destinationNode];
-            let csvStr = `"${location}: ${interval}`;
-            body += sourceNode === 0 ? csvStr : csvStr + '\n';
+            if (count === 0) {
+              doctorBody += `"${location}: ${interval}`;
+            } else {
+              doctorBody += `\n${location}: ${interval}`;
+            }
+            count++;
             sourceNode = destinationNode;
           }
         }
-        body += ',';
       }
-      body += '\n';
+      doctorBody = doctorBody.slice(0, -1); //remove last comma
+      body += doctorBody;
     };
+    return body;
   };
 
   //helper function to parse the results from lp solver into a CSV-friendly format
@@ -115,7 +128,9 @@ const Generate = () => {
     };
     //assign the body
     const body = parseBody(data, solutionArray);
-    return header.concat(',', body);
+    console.log(solutionArray);
+    console.log(body);
+    //return header.concat(',', body);
   };
 
   // Function to download the CSV file
@@ -139,8 +154,8 @@ const Generate = () => {
 
   //helper function to download a csv of the results
   const serveCSV = data => {
-    const parsedResults = parseResults(data);
-    download(parsedResults);
+    /*const parsedResults = */parseResults(data);
+    //download(parsedResults);
   };
 
   const handleGenerate = async () => {

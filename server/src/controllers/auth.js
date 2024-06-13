@@ -65,7 +65,8 @@ exports.generate = async (req, res) => {
             results: data.results,
             days: data.days,
             doctors: data.doctors,
-            nodes: data.nodes
+            nodes: data.nodes,
+            dummyDestinationNodes: data.dummyDestinationNodes
         });
     } catch(error) {
         console.log(error.message);
