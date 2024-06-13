@@ -79,7 +79,8 @@ const Generate = () => {
     let body = ''; //initialize
     const { days, doctors, nodes, dummyDestinationNodes } = data;
     for (let i = 0; i < doctors.length; i++) {
-      let doctorBody = `\n${doctors[i]},`;
+      body += `\n${doctors[i]},`;
+      let doctorBody = '';
       for (let j = 0; j < days.length; j++) {
         let destinationDummyReached = false;
         let sourceNode = 0;
@@ -89,7 +90,7 @@ const Generate = () => {
           if (destinationNode === null || destinationNode === dummyDestinationNodes[j]) {
             if (count === 1) {
               doctorBody = doctorBody.slice(1);
-            } else {
+            } else if (count > 1) {
               doctorBody += `"`;
             };
             doctorBody += `,`;
@@ -105,9 +106,10 @@ const Generate = () => {
             sourceNode = destinationNode;
           }
         }
+        body += doctorBody;
+        doctorBody = '';
       }
-      doctorBody = doctorBody.slice(0, -1); //remove last comma
-      body += doctorBody;
+      body = body.slice(0, -1); //remove last comma
     };
     return body;
   };
@@ -115,7 +117,7 @@ const Generate = () => {
   //helper function to parse the results from lp solver into a CSV-friendly format
   const parseResults = data => {
     //assign the header
-    const header = [data.days.join(',')].join('\n');
+    const header = ' ,' + [data.days.join(',')].join('\n');
     //prepare to assign the body by putting the results from lp-solver into a solution array containing only the decision variables at play
     const resultsArray = Object.keys(data.results);
     const solutionArray = [];
@@ -128,13 +130,12 @@ const Generate = () => {
     };
     //assign the body
     const body = parseBody(data, solutionArray);
-    console.log(solutionArray);
-    console.log(body);
-    //return header.concat(',', body);
+    return header.concat('', body);
   };
 
   // Function to download the CSV file
   const download = (parsedResults) => {
+    
     // Create a Blob with the CSV data and type
     const blob = new Blob([parsedResults], { type: 'text/csv' });
     
@@ -146,16 +147,16 @@ const Generate = () => {
     
     // Set the URL and download attribute of the anchor tag
     a.href = url;
-    a.download = `jeezik-results-${Date.getMonth() + 1}-${Date.getDate()}-${Date.getFullYear()}.csv`;
-    
+    a.download = `jeezik-results.csv`;
+
     // Trigger the download by clicking the anchor tag
     a.click();
   };
 
   //helper function to download a csv of the results
   const serveCSV = data => {
-    /*const parsedResults = */parseResults(data);
-    //download(parsedResults);
+    const parsedResults = parseResults(data);
+    download(parsedResults);
   };
 
   const handleGenerate = async () => {
