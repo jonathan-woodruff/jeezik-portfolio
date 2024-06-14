@@ -198,7 +198,7 @@ const Generate = () => {
             <Typography component="h1" variant="h5">
               Select anesthesiologists
             </Typography>
-            <Grid container spacing={1} alignItems="center">
+            <Grid container spacing={1} alignItems="center" sx={{ mt: 2 }}>
               <Grid 
                 item 
                 xs={ matches425 ? 6 : 4 } 
@@ -247,7 +247,7 @@ const Generate = () => {
               variant="contained"
               sx={{ mt: 2, mb: 2 }}
             >
-              Generate Schedule
+              Download Schedule
             </Button>
             <Typography sx={{ color: 'red' }}>
               { generateError }
