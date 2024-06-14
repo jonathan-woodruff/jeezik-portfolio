@@ -15,6 +15,7 @@ import {
   Container
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { blueGrey } from '@mui/material/colors';
 
 
 function Copyright(props) {
@@ -30,7 +31,11 @@ function Copyright(props) {
   );
 }
 
-const defaultTheme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: blueGrey
+  },
+});
 
 const Register = () => {
     const navigate = useNavigate();
@@ -79,7 +84,7 @@ const Register = () => {
 
     return (
       <Layout>
-        <ThemeProvider theme={defaultTheme}>
+        <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Box

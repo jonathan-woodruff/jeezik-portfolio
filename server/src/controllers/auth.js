@@ -4,6 +4,16 @@ const { sign } = require('jsonwebtoken');
 const { SECRET } = require('../constants/index');
 const { generateOptimalPaths } = require('../../lpsolver/node_modules/javascript-lp-solver/model');
 
+exports.protected = (req, res) => {
+    try {
+        res.status(200).json({
+            info: 'protected info'
+        });
+    } catch(error) {
+        console.log(error.message);
+    }
+};
+
 exports.register = async (req, res) => {
     const { email, password } = req.body;
     try {

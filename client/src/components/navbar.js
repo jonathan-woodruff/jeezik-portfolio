@@ -6,10 +6,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { onLogout } from '../api/auth';
 import { unauthenticateUser } from '../redux/slices/authSlice';
-import { useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { blueGrey } from '@mui/material/colors';
 
 export const Navbar = () => {
-    const theme = useTheme();
+    const theme = createTheme({
+      palette: {
+        primary: blueGrey
+      }
+    });
     const matches375 = useMediaQuery('(max-width: 375px)');
 
     const dispatch = useDispatch();
@@ -29,6 +34,7 @@ export const Navbar = () => {
     const { isAuth } = useSelector(state => state.auth);
     const { clientURL } = useSelector(state => state.glob);
     return (
+      <ThemeProvider theme={theme}>
         <AppBar position='static'>
             <Toolbar>
                 <IconButton size='large' edge='start' color='inherit' aria-label='home icon'>
@@ -50,5 +56,6 @@ export const Navbar = () => {
                 )}
             </Toolbar>
         </AppBar>
+      </ThemeProvider>
     );
 };

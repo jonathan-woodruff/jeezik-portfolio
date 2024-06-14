@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Layout from '../components/layout';
-import { onGenerate } from '../api/auth';
+import { fetchProtectedInfo, onGenerate } from '../api/auth';
+import { logout } from '../utils/index';
+import { Spinner } from '../components/spinner';
+import { unauthenticateUser } from '../redux/slices/authSlice';
 import {
   CssBaseline,
   Typography,
@@ -13,10 +17,16 @@ import {
   useMediaQuery
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { blueGrey } from '@mui/material/colors';
 
-const defaultTheme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: blueGrey
+  },
+});
 
 const Generate = () => {
+  const dispatch = useDispatch();
   const matches425 = useMediaQuery('(max-width: 425px)');
   const doctorsInput = {
     '1': {
@@ -44,8 +54,20 @@ const Generate = () => {
       isChecked: false
     }
   };
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [doctors, setDoctors] = useState(doctorsInput);
   const [generateError, setGenerateError] = useState('');
+
+  const checkAuthenticated = async () => {
+    try {
+      await fetchProtectedInfo();
+      setIsAuthenticated(true);
+    } catch(error) {
+      logout(); //if the user isn't property authenticated using the token on the cookie or there is some other issue, this will force logout thus not allowing a user to gain unauthenticated access
+      dispatch(unauthenticateUser());
+    }
+  };
 
   //helper function to filter doctors down to those which are selected
   const getSelectedDoctors = () => {
@@ -182,9 +204,26 @@ const Generate = () => {
     setDoctors(list);
   };
 
-  return (
+  //ensure the user is authenticated to view the page
+  useEffect(() => {
+    const initializeAuth = async () => {
+      await checkAuthenticated();
+    }
+    initializeAuth();
+  }, []);
+
+  //load the page content
+  useEffect(() => {
+    if (isAuthenticated) setLoading(false);
+  }, [isAuthenticated]);
+
+  return loading ? (
+    <Layout>
+      <Spinner />
+    </Layout>
+    ) : (
       <Layout>
-      <ThemeProvider theme={defaultTheme}>
+      <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box

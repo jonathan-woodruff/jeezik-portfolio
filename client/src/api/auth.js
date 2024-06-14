@@ -3,6 +3,10 @@ import { SERVER_URL } from '../constants/index';
 import axios from 'axios';
 axios.defaults.withCredentials = true; //send the cookie back to the server with token
 
+export async function fetchProtectedInfo() {
+    return await axios.get(`${SERVER_URL}/auth/protected`);
+}
+
 export async function onRegistration(registrationData) {
     return await axios.post(`${SERVER_URL}/auth/register`, registrationData);
 };

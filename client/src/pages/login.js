@@ -17,7 +17,7 @@ import {
   Snackbar
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { blueGrey } from '@mui/material/colors';
 
 function Copyright(props) {
   return (
@@ -32,7 +32,11 @@ function Copyright(props) {
   );
 }
 
-const defaultTheme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: blueGrey
+  },
+});
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -90,7 +94,7 @@ const Login = () => {
 
     return (
       <Layout>
-        <ThemeProvider theme={defaultTheme}>
+        <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Box

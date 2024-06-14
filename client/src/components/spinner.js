@@ -1,11 +1,16 @@
 import { Container, CssBaseline, Box, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { purple } from '@mui/material/colors';
 
-const defaultTheme = createTheme();
+const theme = createTheme({
+    palette: {
+      primary: purple
+    },
+  });
 
 export const Spinner = () => {
     return (
-        <ThemeProvider theme={defaultTheme}>
+        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box sx={{
