@@ -1,7 +1,7 @@
 /* This page defines the navbar at the right-hand side of the header */
 
 import { AppBar, Toolbar, IconButton, Typography, Stack, Button, useMediaQuery } from '@mui/material';
-import EggIcon from '@mui/icons-material/Egg';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { onLogout } from '../api/auth';
@@ -32,7 +32,7 @@ export const Navbar = () => {
         <AppBar position='static'>
             <Toolbar>
                 <IconButton size='large' edge='start' color='inherit' aria-label='home icon'>
-                    <EggIcon />
+                    <RadioButtonCheckedIcon />
                 </IconButton>
                 
                 <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
