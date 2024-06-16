@@ -1,15 +1,17 @@
 const { config } = require('dotenv');
 config();
 
+const isProduction = true;
+
 module.exports = {
     PORT: process.env.PORT,
-    CLIENT_URL: process.env.CLIENT_URL,
-    SERVER_URL: process.env.SERVER_URL,
+    CLIENT_URL: isProduction ? process.env.CLIENT_URL_PRODUCTION : process.env.CLIENT_URL_LOCAL,
+    SERVER_URL: isProduction ? process.env.SERVER_URL_PRODUCTION : process.env.SERVER_URL_LOCAL,
     SECRET: process.env.SECRET,
     //database constants
-    DB_USER: process.env.DB_USER,
-    DB_HOST: process.env.DB_HOST,
-    DB_DATABASE: process.env.DB_DATABASE,
+    DB_USER: isProduction ? process.env.DB_USER_PRODUCTION : process.env.DB_USER_LOCAL,
+    DB_HOST: isProduction ? process.env.DB_HOST_PRODUCTION :  process.env.DB_HOST_LOCAL,
+    DB_DATABASE: isProduction ? process.env.DB_DATABASE_PRODUCTION : process.env.DB_DATABASE_LOCAL,
     DB_PASSWORD: process.env.DB_PASSWORD,
     DB_PORT: process.env.DB_PORT
 };

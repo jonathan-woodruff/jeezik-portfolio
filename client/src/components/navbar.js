@@ -2,9 +2,10 @@
 
 import { AppBar, Toolbar, IconButton, Typography, Stack, Button, useMediaQuery } from '@mui/material';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { onLogout } from '../api/auth';
+import { CLIENT_URL } from '../constants/index';
 import { unauthenticateUser } from '../redux/slices/authSlice';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blueGrey } from '@mui/material/colors';
@@ -18,7 +19,6 @@ export const Navbar = () => {
     const matches375 = useMediaQuery('(max-width: 375px)');
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     
     const logout = async () => {
         try {
@@ -30,9 +30,8 @@ export const Navbar = () => {
         }
     };
     
-
     const { isAuth } = useSelector(state => state.auth);
-    const { clientURL } = useSelector(state => state.glob);
+
     return (
       <ThemeProvider theme={theme}>
         <AppBar position='static'>
@@ -50,8 +49,8 @@ export const Navbar = () => {
                     </Stack>
                 ) : (
                     <Stack direction='row' spacing={3}>
-                        <Button color='inherit' component={Link} to={`${clientURL}/login`}>Log in</Button>
-                        <Button color='inherit' component={Link} to={`${clientURL}/register`}>Sign Up</Button>
+                        <Button color='inherit' component={Link} to={`${CLIENT_URL}/login`}>Log in</Button>
+                        <Button color='inherit' component={Link} to={`${CLIENT_URL}/register`}>Sign Up</Button>
                     </Stack>
                 )}
             </Toolbar>
