@@ -1,7 +1,7 @@
 const { config } = require('dotenv');
 config();
 
-const isProduction = true;
+const isProduction = false;
 
 module.exports = {
     PORT: process.env.PORT,
